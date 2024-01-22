@@ -1,0 +1,24 @@
+FROM dorowu/ubuntu-desktop-lxde-vnc:latest
+
+#gnuradio setup
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+RUN apt-get update
+
+# else it will output an error about Gtk namespace not found
+RUN apt-get install -y gir1.2-gtk-3.0
+
+# to have add-apt-repository available
+RUN apt-get install -y software-properties-common
+
+RUN add-apt-repository -y ppa:gnuradio/gnuradio-releases
+
+RUN apt-get update
+
+RUN apt-get install -y gnuradio
+
+# installing other packages needed for downloading and installing OOT modules
+RUN apt-get install -y python3-pip gnuradio-dev cmake git libboost-all-dev libcppunit-dev liblog4cpp5-dev python3-pygccxml pybind11-dev liborc-dev libiio-dev libad9361-dev libspdlog-dev python3-packaging python3-jsonschema
+RUN pip3 install pygccxml 
+RUN pip3 install pyqtgraph
+
+ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3/dist-packages"
